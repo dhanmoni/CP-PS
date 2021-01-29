@@ -9,6 +9,7 @@ URL:
 #include<vector>
 #include<algorithm>
 #include <queue>
+#include <stack>
 using namespace std;
 
 class Node {
@@ -75,6 +76,63 @@ class BST {
       postOrderTraverse(root->left);
       postOrderTraverse(root->right);
       cout << root->data << "\t";
+    }
+
+    void inOrderIterative(Node* root) {
+      if(!root) return;
+      stack<Node *> s; 
+      Node* curr = root; 
+  
+    // while (curr != NULL || s.empty() == false) 
+    // { 
+    //     /* Reach the left most Node of the 
+    //        curr Node */
+    //     while (curr !=  NULL) 
+    //     { 
+    //         /* place pointer to a tree node on 
+    //            the stack before traversing 
+    //           the node's left subtree */
+    //         s.push(curr); 
+    //         curr = curr->left; 
+    //     } 
+  
+    //     /* Current must be NULL at this point */
+    //     curr = s.top(); 
+    //     s.pop(); 
+  
+    //     cout << curr->data << " "; 
+  
+    //     /* we have visited the node and its 
+    //        left subtree.  Now, it's right 
+    //        subtree's turn */
+    //     curr = curr->right; 
+  
+    // } /* end of while */
+    //   Node* curr = root;
+    //  while(curr->left != NULL) {
+    //    st.push(curr);
+    //    curr = curr->left;
+    //    while(curr != NULL || !st.empty()) {
+    //    Node* top = st.top();
+    //    st.pop();
+    //    cout << top->data << " ";
+    //    curr = top->right;   
+    //  }
+    //  }
+
+    while(curr != NULL || s.empty() == false) {
+      if(curr != NULL) {
+        s.push(curr);
+        curr = curr->left;
+      } else {
+        curr = s.top();
+      cout << curr->data << " ";
+      s.pop();
+
+      curr = curr->right;
+      }
+    }
+
     }
 
     void BFS(Node* root) {
@@ -167,6 +225,61 @@ class BST {
       
     } 
 
+    int numOfNodes(Node* rootNode) {
+      if(!rootNode) return 0;
+      int count = 0;
+      queue<Node*> q;
+      Node* curr = rootNode;
+      q.push(curr);
+      while(!q.empty()){
+        if(q.front()->left) q.push(q.front()->left);
+        if(q.front()->right) q.push(q.front()->right);
+        q.pop();
+        count++;
+      }
+      return count;
+    }
+
+    int heightOfBST(Node* rootNode) {
+      if(!rootNode) return -1;
+      return 1 + max(heightOfBST(rootNode->left), heightOfBST(rootNode->right));
+    }
+
+    int heightOfBSTItr(Node* rootNode) {
+      if(!rootNode) return -1;
+      queue<Node*> q;
+      q.push(rootNode);
+      int height = -1;
+      while(true) {
+        int nodeCount = q.size();
+        if(nodeCount == 0) return height;
+        height++;
+
+        while(nodeCount > 0) {
+          Node* curr = q.front();
+          if(curr->left) q.push(curr->left);
+          if(curr->right) q.push(curr->right);
+          q.pop();
+          nodeCount--;
+        }
+      }
+    }
+   
+   int numOfLeafNode(Node* rootNode) {
+     if(!rootNode) return -1;
+     int count = 0;
+     queue<Node*> q;
+     Node* curr = rootNode;
+     q.push(curr);
+     while(!q.empty()){
+       if(!q.front()->left && !q.front()->right) count++;
+       if(q.front()->left) q.push(q.front()->left);
+       if(q.front()->right) q.push(q.front()->right);
+        q.pop();
+     }
+     return count;
+   }
+
 };
 
 
@@ -185,25 +298,31 @@ int main() {
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
   myBST.insertNode(_root, 9);
-  // myBST.preOrderTraverse(_root);
+ // myBST.preOrderTraverse(_root);
   // cout<<endl;
-  // myBST.inOrderTraverse(_root);
-  // cout<<endl;
+   //myBST.inOrderTraverse(_root);
+  //cout<<endl;
+  //cout << myBST.numOfNodes(_root);
+  cout<< endl;
+  cout << myBST.heightOfBSTItr(_root);
   // myBST.postOrderTraverse(_root);
   // cout<<endl;
-  myBST.BFS(_root);
+  //myBST.inOrderIterative(_root);
+ // myBST.getNode(_root);
   //cout << myBST.searchNode(_root, 10);
   cout << endl;
+  //myBST.inOrderIterative(_root);
+
   // cout << myBST.findMax(_root) <<endl;
   // cout << myBST.findMin(_root) <<endl;
-  myBST.deleteNode(_root, 63);
-  myBST.BFS(_root);
-  myBST.deleteNode(_root, 7);
-  myBST.BFS(_root);
-   myBST.deleteNode(_root, 14);
-  myBST.BFS(_root);
-  myBST.deleteNode(_root, 53);
-  myBST.BFS(_root);
+  // myBST.deleteNode(_root, 63);
+   //myBST.BFS(_root);
+  // myBST.deleteNode(_root, 7);
+  // myBST.BFS(_root);
+  //  myBST.deleteNode(_root, 14);
+  // myBST.BFS(_root);
+  // myBST.deleteNode(_root, 53);
+  // myBST.BFS(_root);
 
   return 0;
 }
