@@ -230,8 +230,53 @@ class BST {
         length = it->second.size();
         cout << it->second[length-1] << "\t";
       }
-
     }
+
+    void leftView(Node* rootNode) {
+      if(!rootNode) return;
+      queue<Node*> q;
+      queue<int> res;
+      q.push(rootNode);
+      while(true) {
+        int nodeCount = q.size(); 
+        if(nodeCount == 0) break;
+        res.push(q.front()->data);
+        while(nodeCount > 0) {
+          Node* temp = q.front();
+          q.pop();
+          if(temp->left) q.push(temp->left);
+          if(temp->right) q.push(temp->right);
+          nodeCount--;
+        }
+      }
+
+      while(!res.empty()){
+        cout << res.front()<< "\t";
+        res.pop();
+      }
+    }
+
+
+
+   void rightView(Node* rootNode) {
+     if(!rootNode) return;
+
+     queue<Node*> q;
+      q.push(rootNode);
+      while(!q.empty()){
+        int nodeCount = q.size();
+        for(int i = 1; i <= nodeCount; ++i){
+          Node* temp = q.front();
+          q.pop();
+          if(i == nodeCount) {
+            cout << temp->data << "\t";
+          }
+          if(temp->left) q.push(temp->left);
+          if(temp->right) q.push(temp->right);
+        }
+      }
+
+   }
 
     Node* searchNode(Node* rootNode, int key) {
       if(!rootNode) {
@@ -393,12 +438,12 @@ int main() {
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
    myBST.insertNode(_root, 9);
-  myBST.bottomView(_root);
+  myBST.rightView(_root);
   // Node* searched = myBST.searchNode(_root, 5);
   // cout << "left val = "<< searched->data;
  // myBST.preOrderTraverse(_root);
   // cout<<endl;
-   //myBST.inOrderTraverse(_root);
+  //  myBST.inOrderTraverse(_root);
   //cout<<endl;
   //cout << myBST.numOfNodes(_root);
   // cout<< endl;
