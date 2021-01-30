@@ -320,6 +320,78 @@ class BST {
     }
   }
 
+  //NOT IN SORTED ORDER:
+  void boundaryTraversal(Node* rootNode) {
+    if(!rootNode) return;
+    queue<Node*> q;
+    q.push(rootNode);
+    while(!q.empty()){
+      int nodeCount = q.size();
+
+      for(int i = 1; i <= nodeCount; ++i){
+        Node* temp = q.front();
+        q.pop();
+        if(i == 1 || i == nodeCount){
+          cout << temp->data << " \t";
+        }
+        if(temp->left) q.push(temp->left);
+        if(temp->right) q.push(temp->right);
+      }
+    }
+  }
+
+  void printLeafNodes(Node* rootNode){
+    if(!rootNode) return;
+    if(!rootNode->left && !rootNode->right) {
+      cout << rootNode->data << " ";
+      return;
+    } 
+    printLeafNodes(rootNode->left);
+    printLeafNodes(rootNode->right);
+
+  }
+  void printLeftNodes(Node* rootNode){
+    if(!rootNode) return;
+    Node* curr = rootNode;
+    while(curr->left != NULL) {
+      cout << curr->data << " ";
+      curr = curr->left;
+    }
+  }
+  void printRightNodes(Node* rootNode){
+    if(!rootNode) return;
+    stack<int> s;
+    Node* curr = rootNode;
+    while(curr->right != NULL) {
+      s.push(curr->data);
+      curr = curr->right;
+    }
+    while(!s.empty()){
+      cout << s.top() << " ";
+      s.pop();
+    }
+  }
+  void printRightNodesRec(Node* rootNode){
+    if(!rootNode) return;
+    if(!rootNode->left && !rootNode->right) return;
+    printRightNodesRec(rootNode->right);
+    cout << rootNode->data << " ";
+  }
+
+  void printLeftNodesRec(Node* rootNode){
+    if(!rootNode) return;
+    if(!rootNode->left && !rootNode->right) return;
+    cout << rootNode->data << " ";
+    printLeftNodesRec(rootNode->left);
+  }
+  
+  void getBoundaryNodes(Node* rootNode) {
+    if(!rootNode) return;
+    printLeftNodes(rootNode);
+    printLeafNodes(rootNode);
+    printRightNodes(rootNode->right);
+  }
+
     Node* searchNode(Node* rootNode, int key) {
       if(!rootNode) {
         cout << "Empty tree!" << endl;
@@ -474,7 +546,11 @@ int main() {
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
    myBST.insertNode(_root, 9);
-   myBST.getDiagonalOrder(_root);
+   myBST.printLeftNodesRec(_root);
+  //  myBST.printRightNodesRec(_root);
+  //  myBST.getBoundaryNodes(_root);
+  //  myBST.getDiagonalOrder(_root);
+  // myBST.boundaryTraversal(_root);
   // myBST.rightView(_root);
   // Node* searched = myBST.searchNode(_root, 5);
   // cout << "left val = "<< searched->data;
