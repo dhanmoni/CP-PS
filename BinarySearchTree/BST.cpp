@@ -275,8 +275,50 @@ class BST {
           if(temp->right) q.push(temp->right);
         }
       }
-
    }
+
+  //  void diagonalView(Node* rootNode) {
+  //    if(!rootNode) return;
+  //    int hd = 0;
+  //    map<int, vector<int>> m;
+  //    queue<Node*> q;
+  //    Node* curr = rootNode;
+  //    q.push(curr);
+  //    while(!q.empty() || curr != NULL){
+  //      if(curr != NULL) {
+  //         if(curr->left) q.push(curr->left);
+  //         if(curr->right) q.push(curr->right);
+  //      }
+  //    }
+  //  }
+
+  void getDiagonalOrder(Node* rootNode) {
+    if(!rootNode) return;
+    map<int, vector<int>> m;
+    queue<pair<int, Node*>> q;
+    Node* curr = rootNode;
+    q.push(make_pair(0, curr));
+
+    while(!q.empty()){
+      pair<int, Node*> temp = q.front();
+      q.pop();
+      int dist = temp.first;
+      Node* node = temp.second;
+      m[dist].push_back(node->data);
+      if(node->left) q.push(make_pair(dist+1, node->left));
+      if(node->right) q.push(make_pair(dist, node->right));
+    }
+    map<int, vector<int>> ::iterator it;
+    int index;
+    for(it = m.begin(), index=1; it != m.end(); ++it, ++index){
+      int length = it->second.size();
+      cout << index <<"-th diagonal values--";
+      for(int i = 0; i <length; ++i) {
+        cout << it->second[i] << " ";
+      }
+      cout<<endl;
+    }
+  }
 
     Node* searchNode(Node* rootNode, int key) {
       if(!rootNode) {
@@ -312,34 +354,28 @@ class BST {
     Node* deleteNode(Node* &root, int key) {
       if(!root) return NULL;
       if(key < root->data) {
-        cout << "less..." << endl;
         deleteNode(root->left, key);
       } else if(key > root->data) {
-        cout << "greater..." << endl;
          deleteNode(root->right, key);
       } else {
         if(root->left == NULL && root->right == NULL) {
         root = NULL;
         delete root;
-        cout << "Deleted 1" << endl;
       } else if(!root->left) {
         root->data = root->right->data;
          deleteNode(root->right, root->right->data);
-        cout << "Deleted 2" << endl;
       } else if(!root->right) {
         root->data = root->left->data;
-       deleteNode(root->left, root->left->data);
-        cout << "Deleted 3" << endl;
+        deleteNode(root->left, root->left->data);
       } else {
-       Node* temp = root->left;
-       while(temp->right != NULL) {
-         temp= temp->right; 
-       }
-       root->data = temp->data;
-       deleteNode(root->left, temp->data);
-       delete temp;
-        cout << "Deleted 4" << endl;
-      }
+        Node* temp = root->left;
+        while(temp->right != NULL) {
+          temp= temp->right; 
+        }
+        root->data = temp->data;
+        deleteNode(root->left, temp->data);
+        delete temp;
+        }
       }
       return root;
     } 
@@ -438,7 +474,8 @@ int main() {
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
    myBST.insertNode(_root, 9);
-  myBST.rightView(_root);
+   myBST.getDiagonalOrder(_root);
+  // myBST.rightView(_root);
   // Node* searched = myBST.searchNode(_root, 5);
   // cout << "left val = "<< searched->data;
  // myBST.preOrderTraverse(_root);
@@ -453,7 +490,7 @@ int main() {
   //myBST.inOrderIterative(_root);
  // myBST.getNode(_root);
   //cout << myBST.searchNode(_root, 10);
-  cout << endl;
+  // cout << endl;
   //myBST.inOrderIterative(_root);
 
   // cout << myBST.findMax(_root) <<endl;
