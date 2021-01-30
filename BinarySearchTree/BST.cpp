@@ -150,13 +150,8 @@ class BST {
       }
     }
 
-    void verticalOrder(Node* rootNode) {
-      if(!rootNode) return;
-
-      map<int, vector<int>> mymap;
-      queue<pair<int, Node*>> q;
-      int hd = 0;
-      q.push(make_pair(0, rootNode));
+    void getVerticalOrderItr( int hd, queue<pair<int, Node*>> &q,
+    map<int, vector<int>> &mymap) {
       while(!q.empty()) {
         pair<int, Node*> temp = q.front();
         q.pop();
@@ -166,6 +161,15 @@ class BST {
         if(node->left) q.push(make_pair(hd-1, node->left));
         if(node->right) q.push(make_pair(hd+1, node->right));
       }
+    }
+    void verticalOrder(Node* rootNode) {
+      if(!rootNode) return;
+
+      map<int, vector<int>> mymap;
+      queue<pair<int, Node*>> q;
+      int hd = 0;
+      q.push(make_pair(0, rootNode));
+      getVerticalOrderItr(hd, q, mymap);
       map<int, vector<int>>:: iterator it;
 
       for(it = mymap.begin(); it != mymap.end(); ++it) {
@@ -175,18 +179,18 @@ class BST {
       }
     }
 
-    void getVertcialOrder(Node* rootNode,int hd, map<int, vector<int>> &map1) {
+    void getVertcialOrderRec(Node* rootNode,int hd, map<int, vector<int>> &h_map) {
       if(!rootNode) return;
-      map1[hd].push_back(rootNode->data);
-      getVertcialOrder(rootNode->left, hd -1, map1);
-      getVertcialOrder(rootNode->right, hd +1, map1);
+      h_map[hd].push_back(rootNode->data);
+      getVertcialOrderRec(rootNode->left, hd -1, h_map);
+      getVertcialOrderRec(rootNode->right, hd +1, h_map);
     }
 
     void verticalOrderRec(Node* rootNode) {
       if(!rootNode) return;
       int hd = 0;
       map<int, vector<int>> map1;
-      getVertcialOrder(rootNode, hd, map1);
+      getVertcialOrderRec(rootNode, hd, map1);
 
       map<int, vector<int>> ::iterator it;
 
@@ -195,6 +199,38 @@ class BST {
           cout << it->second[i] << "\t";
         }
       }
+    }
+
+    void topView(Node* rootNode) {
+      if(!rootNode) return;
+      map<int, vector<int>> m;
+      queue<pair<int, Node*>> q;
+      int hd = 0;
+      q.push(make_pair(0, rootNode));
+      getVerticalOrderItr(hd,q, m);
+
+      map<int, vector<int>>::iterator it;
+
+      for(it = m.begin(); it != m.end(); ++it) {
+        cout << it->second[0] << "\t";
+      }
+    }
+
+    void bottomView(Node* rootNode) {
+      if(!rootNode) return;
+      map<int, vector<int>> hm;
+      queue<pair<int, Node*>> q;
+      int hd = 0;
+      q.push(make_pair(0, rootNode));
+      getVerticalOrderItr(hd, q, hm);
+
+      map<int, vector<int>> ::iterator it;
+      int length;
+      for(it = hm.begin(); it != hm.end(); ++it) {
+        length = it->second.size();
+        cout << it->second[length-1] << "\t";
+      }
+
     }
 
     Node* searchNode(Node* rootNode, int key) {
@@ -356,8 +392,8 @@ int main() {
   myBST.insertNode(_root, 3);
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
-  myBST.insertNode(_root, 9);
-  myBST.verticalOrderRec(_root);
+   myBST.insertNode(_root, 9);
+  myBST.bottomView(_root);
   // Node* searched = myBST.searchNode(_root, 5);
   // cout << "left val = "<< searched->data;
  // myBST.preOrderTraverse(_root);
