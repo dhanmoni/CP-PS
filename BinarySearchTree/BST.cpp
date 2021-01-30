@@ -10,6 +10,7 @@ URL:
 #include<algorithm>
 #include <queue>
 #include <stack>
+#include <map>
 using namespace std;
 
 class Node {
@@ -17,6 +18,16 @@ class Node {
     int data;
     Node *right;
     Node *left;
+};
+
+class NodeObj {
+  public:
+    int dist;
+    Node* node;
+    NodeObj(int dist, Node* node) {
+      this->dist = dist;
+      this->node = node;
+    }
 };
 
 class BST {
@@ -82,57 +93,44 @@ class BST {
       if(!root) return;
       stack<Node *> s; 
       Node* curr = root; 
-  
-    // while (curr != NULL || s.empty() == false) 
-    // { 
-    //     /* Reach the left most Node of the 
-    //        curr Node */
-    //     while (curr !=  NULL) 
-    //     { 
-    //         /* place pointer to a tree node on 
-    //            the stack before traversing 
-    //           the node's left subtree */
-    //         s.push(curr); 
-    //         curr = curr->left; 
-    //     } 
-  
-    //     /* Current must be NULL at this point */
-    //     curr = s.top(); 
-    //     s.pop(); 
-  
-    //     cout << curr->data << " "; 
-  
-    //     /* we have visited the node and its 
-    //        left subtree.  Now, it's right 
-    //        subtree's turn */
-    //     curr = curr->right; 
-  
-    // } /* end of while */
-    //   Node* curr = root;
-    //  while(curr->left != NULL) {
-    //    st.push(curr);
-    //    curr = curr->left;
-    //    while(curr != NULL || !st.empty()) {
-    //    Node* top = st.top();
-    //    st.pop();
-    //    cout << top->data << " ";
-    //    curr = top->right;   
-    //  }
-    //  }
 
-    while(curr != NULL || s.empty() == false) {
-      if(curr != NULL) {
-        s.push(curr);
-        curr = curr->left;
-      } else {
-        curr = s.top();
-      cout << curr->data << " ";
-      s.pop();
+      while(curr != NULL || s.empty() == false) {
+        if(curr != NULL) {
+          s.push(curr);
+          curr = curr->left;
+        } else {
+          curr = s.top();
+        cout << curr->data << " ";
+        s.pop();
 
-      curr = curr->right;
+        curr = curr->right;
+        }
       }
     }
 
+    void postOrderItr(Node* rootNode) {
+      if(!rootNode) return;
+      stack<Node*> st_temp;
+      stack<Node*> st_res;
+
+      Node* curr = rootNode;
+      
+      while(!st_temp.empty() || curr != NULL) {
+        if(curr != NULL) {
+          st_temp.push(curr);
+          st_res.push(curr);
+          curr = curr->right;
+        } else {
+          curr = st_temp.top();
+          st_temp.pop();
+          curr = curr->left;
+        }
+        
+      }
+      while(!st_res.empty()) {
+        cout << st_res.top()->data << " ";
+        st_res.pop();
+      }
     }
 
     void BFS(Node* root) {
@@ -152,22 +150,66 @@ class BST {
       }
     }
 
-    Node* searchNode(Node* root, int key) {
-      if(!root) {
+    void verticalOrder(Node* rootNode) {
+      if(!rootNode) return;
+
+      map<int, vector<int>> mymap;
+      queue<pair<int, Node*>> q;
+      int hd = 0;
+      q.push(make_pair(0, rootNode));
+      while(!q.empty()) {
+        pair<int, Node*> temp = q.front();
+        q.pop();
+        hd = temp.first;
+        Node* node = temp.second;
+        mymap[hd].push_back(node->data);
+        if(node->left) q.push(make_pair(hd-1, node->left));
+        if(node->right) q.push(make_pair(hd+1, node->right));
+      }
+      map<int, vector<int>>:: iterator it;
+
+      for(it = mymap.begin(); it != mymap.end(); ++it) {
+        for(int i = 0; i < it->second.size(); ++i) {
+          cout << it->second[i] << "\t";
+        }
+      }
+    }
+
+    void getVertcialOrder(Node* rootNode,int hd, map<int, vector<int>> &map1) {
+      if(!rootNode) return;
+      map1[hd].push_back(rootNode->data);
+      getVertcialOrder(rootNode->left, hd -1, map1);
+      getVertcialOrder(rootNode->right, hd +1, map1);
+    }
+
+    void verticalOrderRec(Node* rootNode) {
+      if(!rootNode) return;
+      int hd = 0;
+      map<int, vector<int>> map1;
+      getVertcialOrder(rootNode, hd, map1);
+
+      map<int, vector<int>> ::iterator it;
+
+      for(it = map1.begin(); it != map1.end(); ++it) {
+        for(int i = 0; i < it->second.size(); ++i) {
+          cout << it->second[i] << "\t";
+        }
+      }
+    }
+
+    Node* searchNode(Node* rootNode, int key) {
+      if(!rootNode) {
         cout << "Empty tree!" << endl;
-        exit(0);
+        return NULL;
       }
-      Node* out = NULL;
-      if(key == root->data){
-         out = root;
-         return out;
+      if(key == rootNode->data){
+         return rootNode;
          }
-      if(key < root->data) {
-        searchNode(root->left, key);
+      else if(key < rootNode->data) {
+        return searchNode(rootNode->left, key);
       } else {
-        searchNode(root->right, key);
+        return searchNode(rootNode->right, key);
       }
-      return out;
     }
 
     int findMax(Node* root) {
@@ -219,10 +261,6 @@ class BST {
       }
       }
       return root;
-      // nodeToBeDeleted = searchNode(root, key);
-      // if(nodeToBeDeleted) cout << "found " << nodeToBeDeleted->data << endl;
-      // if(!nodeToBeDeleted) return;
-      
     } 
 
     int numOfNodes(Node* rootNode) {
@@ -280,6 +318,27 @@ class BST {
      return count;
    }
 
+   bool isLesserSubtree(Node* rootNode, int val){
+     if(rootNode == NULL) return true;
+     if(rootNode->data < val && isLesserSubtree(rootNode->left, val) && isLesserSubtree(rootNode->right, val)) return true;
+     return false;
+   }
+
+   bool isGreaterSubtree(Node* rootNode, int val) {
+     if(rootNode == NULL) return true;
+     if(rootNode->data > val && isGreaterSubtree(rootNode->left, val) && isGreaterSubtree(rootNode->right, val)) return true;
+     return false;
+   }
+
+   bool checkBST(Node* rootNode) {
+     if(!rootNode) return true;
+     if(isLesserSubtree(rootNode->left, rootNode->data) && 
+     isGreaterSubtree(rootNode->right, rootNode->data) && 
+     checkBST(rootNode->left) && 
+     checkBST(rootNode->right)) return true;
+     return false;
+   }
+
 };
 
 
@@ -298,13 +357,16 @@ int main() {
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
   myBST.insertNode(_root, 9);
+  myBST.verticalOrderRec(_root);
+  // Node* searched = myBST.searchNode(_root, 5);
+  // cout << "left val = "<< searched->data;
  // myBST.preOrderTraverse(_root);
   // cout<<endl;
    //myBST.inOrderTraverse(_root);
   //cout<<endl;
   //cout << myBST.numOfNodes(_root);
-  cout<< endl;
-  cout << myBST.heightOfBSTItr(_root);
+  // cout<< endl;
+  // cout << myBST.checkBST(_root);
   // myBST.postOrderTraverse(_root);
   // cout<<endl;
   //myBST.inOrderIterative(_root);
