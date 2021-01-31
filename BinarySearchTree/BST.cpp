@@ -556,6 +556,16 @@ class BST {
      return false;
    }
 
+
+  Node* invertTree(Node* rootNode) {
+    if(!rootNode) return NULL;
+    Node* left = invertTree(rootNode->left);
+    Node* right = invertTree(rootNode->right);
+
+    rootNode->left = right;
+    rootNode->right = left;
+    return rootNode;
+  }
 };
 
 
@@ -574,7 +584,9 @@ int main() {
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
    myBST.insertNode(_root, 9);
-   myBST.spiralTraverse(_root);
+  //  myBST.spiralTraverse(_root);
+  //  Node* invertedRoot = myBST.invertTree(_root);
+  //  myBST.BFS(invertedRoot);
   //  myBST.printLeftNodesRec(_root);
   //  myBST.printRightNodesRec(_root);
   //  myBST.getBoundaryNodes(_root);
