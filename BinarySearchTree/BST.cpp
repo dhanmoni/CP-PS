@@ -392,6 +392,34 @@ class BST {
     printRightNodes(rootNode->right);
   }
 
+  void spiralTraverse(Node* rootNode) {
+    if(!rootNode) return;
+    stack<Node*> s1; 
+    stack<Node*> s2;
+    Node* curr = rootNode;
+    s1.push(curr);
+
+    while(!s1.empty() || !s2.empty()){
+      while(!s1.empty()) {
+        Node* s1Top = s1.top();
+        s1.pop();
+        cout << s1Top->data << " ";
+        if(s1Top->left) s2.push(s1Top->left);
+        if(s1Top->right) s2.push(s1Top->right);
+      }
+      
+      while(!s2.empty()){
+        Node* s2Top = s2.top();
+        s2.pop();
+        cout << s2Top->data << " ";
+        if(s2Top->right) s1.push(s2Top->right);
+        if(s2Top->left) s1.push(s2Top->left);
+      }
+       
+      
+    }  
+  }
+
     Node* searchNode(Node* rootNode, int key) {
       if(!rootNode) {
         cout << "Empty tree!" << endl;
@@ -546,7 +574,8 @@ int main() {
   myBST.insertNode(_root, 7);
   myBST.insertNode(_root, 6);
    myBST.insertNode(_root, 9);
-   myBST.printLeftNodesRec(_root);
+   myBST.spiralTraverse(_root);
+  //  myBST.printLeftNodesRec(_root);
   //  myBST.printRightNodesRec(_root);
   //  myBST.getBoundaryNodes(_root);
   //  myBST.getDiagonalOrder(_root);
