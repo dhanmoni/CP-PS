@@ -1,6 +1,6 @@
 /*
 PROBLEM STATEMENT:
-Impliment unordered graph and its operations:
+Impliment unDirected graph and its operations:
 URL:
 
 
@@ -124,6 +124,7 @@ int main() {
   GraphUsingALAndVertexCls g2(adjList2);
   g2.printGraph();
 
+  //ADJACENCY MATRIX----
   vector<vector<int>> adjMatrix = {
     {0,1,0,1,0},
     {1,0,1,0,1},
