@@ -91,9 +91,44 @@ class GraphUsingAdjMatrix {
     }
 };
 
+class GraphFromEdges{
+  public:
+    map<int, vector<int>> adjList;
+    void addEdge(pair<int, int> edge) {
+      adjList[edge.first].push_back(edge.second);
+      adjList[edge.second].push_back(edge.first);
+    }
+    void printList(){
+      map<int, vector<int>>::iterator it;
+      for(it = adjList.begin(); it != adjList.end(); ++it) {
+        cout << it->first << "-> ";
+        for(int j = 0; j < it->second.size(); ++j) {
+          cout << it->second[j] << " ";
+        }
+        cout << "\t";
+      }
+    }
+};
+
 
 int main() {
 
+
+  GraphFromEdges g4;
+  // GET INPUT EDGES FROM USER---
+  int len, n1, n2;
+  cin >> len;
+  for(int i = 0; i < len ; ++i) {
+    cin >> n1 >> n2;
+    g4.addEdge(make_pair(n1,n2));
+  }
+  // OR PASS THEM DIRECTLY
+  g4.addEdge({1, 2});
+  g4.addEdge({1, 4});
+  g4.addEdge({2, 5});
+  g4.printList();
+
+  /*
   //USING VERTEX AND EDGES AS EDGE LIST----
 
   vector<int> vertices= {1,2,3,4,5};
@@ -101,7 +136,6 @@ int main() {
 
   Graph g(vertices, edges);
   g.printVertexnEdges();
-
   //USING ADJACENCY LIST----
   //METHOD-1:
   map<int, vector<int>> adjList1 = {
@@ -134,6 +168,6 @@ int main() {
   };
   GraphUsingAdjMatrix g3(adjMatrix);
   g3.printMatrix();
-
+  */
   return 0;
 }
