@@ -10,6 +10,7 @@ URL:
 #include<algorithm>
 #include <map>
 #include <set>
+#include<list>
 using namespace std;
 
 
@@ -76,6 +77,35 @@ class GraphUsingALAndVertexCls {
     }
 };
 
+
+//USING LINKEDLIST----
+class GraphWithLinkedList {
+  private:
+    int V;
+    list<int> *adj;
+  public:
+    GraphWithLinkedList(int v) {
+      this->V = v;
+      adj = new list<int>[v];
+    }
+    void addEdge(int from, int to) {
+      cout << "added " << from << ", " << to << "\t";
+      adj[from].push_back(to);
+      adj[to].push_back(from);
+    }
+    void printgraph() {
+      cout <<endl;
+      for(int i = 0; i < V; ++i) {
+        cout <<"Vertex "<< i << "-> ";
+        for(auto l: adj[i]){
+          cout << l << " ";
+        }
+        cout << "\t";
+        
+      }
+    }
+};
+
 class GraphUsingAdjMatrix {
   public:
     vector<vector<int>> matrix;
@@ -114,21 +144,6 @@ class GraphFromEdges{
 int main() {
 
 
-  GraphFromEdges g4;
-  // GET INPUT EDGES FROM USER---
-  int len, n1, n2;
-  cin >> len;
-  for(int i = 0; i < len ; ++i) {
-    cin >> n1 >> n2;
-    g4.addEdge(make_pair(n1,n2));
-  }
-  // OR PASS THEM DIRECTLY
-  g4.addEdge({1, 2});
-  g4.addEdge({1, 4});
-  g4.addEdge({2, 5});
-  g4.printList();
-
-  /*
   //USING VERTEX AND EDGES AS EDGE LIST----
 
   vector<int> vertices= {1,2,3,4,5};
@@ -136,8 +151,11 @@ int main() {
 
   Graph g(vertices, edges);
   g.printVertexnEdges();
+
+
   //USING ADJACENCY LIST----
-  //METHOD-1:
+    //METHOD-1:
+
   map<int, vector<int>> adjList1 = {
     {1, {2,4}},
     {2, {1,3,5}},
@@ -148,7 +166,7 @@ int main() {
   GraphUsingAL1 g1(adjList1);
   g1.printGraph();
 
-  //METHOD 2-
+    //METHOD 2-
   vector<Vertex> adjList2 = {Vertex(1, {2,4}), 
   Vertex({2, {1,3,5}}),
   Vertex({3, {2}}),
@@ -168,6 +186,30 @@ int main() {
   };
   GraphUsingAdjMatrix g3(adjMatrix);
   g3.printMatrix();
-  */
+  
+  //FROM ONLY EDGES---
+  GraphFromEdges g4;
+  // GET INPUT EDGES FROM USER---
+  int len, n1, n2;
+  cin >> len;
+  for(int i = 0; i < len ; ++i) {
+    cin >> n1 >> n2;
+    g4.addEdge(make_pair(n1,n2));
+  }
+  // OR PASS THEM DIRECTLY
+  g4.addEdge({1, 2});
+  g4.addEdge({1, 4});
+  g4.addEdge({2, 5});
+  g4.printList();
+
+  //USING LINKEDLIST---
+  GraphWithLinkedList g5(6);
+  g5.addEdge(1, 2);
+  g5.addEdge(1, 4);
+  g5.addEdge(2, 3);
+  g5.addEdge(4, 5);
+  g5.addEdge(2, 5);
+  g5.printgraph();
+
   return 0;
 }

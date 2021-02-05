@@ -36,8 +36,8 @@ void Graph::printGraph() {
     char vertex = l.first;
     list<pair<char, int>> neighbours = l.second;
     cout << vertex << "-> ";
-    for(auto p: neighbours) {
-      cout <<"(" << p.first << ", " << p.second << ") ";
+    for(auto nbr: neighbours) {
+      cout <<"(" << nbr.first << ", " << nbr.second << ") ";
     }
     cout << "\t";
   }
