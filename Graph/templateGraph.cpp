@@ -11,6 +11,8 @@ URL:
 #include<unordered_map>
 #include<list>
 #include<queue>
+#include <climits>
+#include <stack>
 using namespace std;
 
 template <typename T>
@@ -30,7 +32,7 @@ class TemplateGraph {
     }
   public:
     TemplateGraph(int v): V(v) {}
-
+    vector<int> vec;
     void addEdge(T from, T to,bool isBiDir, int weight) {
       adjList[from].push_back(make_pair(to, weight));
       if(isBiDir) {
@@ -94,10 +96,63 @@ class TemplateGraph {
       return containsCycleUtil(start, visited, start);
     }
 
+    void dijkstras(T start, T end) {
+      unordered_map<T, int> dist;
+      priority_queue<pair<T, int>, vector<pair<T, int>>, greater<pair<T, int>>> pq;
+      unordered_map<T, T> parent;
+      stack<T> res;
+      for(auto vtx: adjList) {
+        T key = vtx.first;
+        dist[key] = INT_MAX;
+      }
+      pq.push(make_pair(start, 0));
+      dist[start] = 0;
+      parent[start] = 0;
+      while(!pq.empty()){
+        T top = pq.top().first;
+        pq.pop();
+        for(auto nbr: adjList[top]){
+          T node = nbr.first;
+          int wt = nbr.second;
+          int newWt = dist[top] + wt;
+          if(newWt < dist[node]) {
+            dist[node] = newWt;
+            pq.push(make_pair(node, dist[node]));
+            parent[node] = top;
+          }
+        }
+      }
+      T curr = end;
+      while(curr != 0) {
+        res.push(curr);
+        curr = parent[curr];
+      }
+      cout << "shortest distance length = "<< dist[end] << " and path = ";
+      while(!res.empty()){
+        T node = res.top();
+        res.pop();
+        cout << node << " ";
+      }
+      
+    }
+
 };
 
 
 int main() {
+
+    TemplateGraph<char> g(9);
+  g.addEdge('A', 'B', true, 2);
+  g.addEdge('A', 'C', true, 5);
+  g.addEdge('B', 'D', true, 7);
+  g.addEdge('C', 'D', true, 2);
+  g.addEdge('C', 'E', true, 3);
+  g.addEdge('E', 'F', true, 4);
+  g.addEdge('E', 'H', true, 3);
+  g.addEdge('F', 'G', true, 1);
+  g.addEdge('D', 'F', true, 1);
+  g.printGraph();
+  g.dijkstras('A', 'F');
   
   // TemplateGraph<char> g(5);
   // g.addEdge('A', 'B', true, 20);
@@ -111,23 +166,25 @@ int main() {
   // // cout << endl;
   // // g.bfs('A');
   // // g.dfs('A');
+
   // cout << g.containsCycle('A');
-  TemplateGraph<int> g2(9);
-  g2.addEdge(1, 2, true, 40);
-   g2.addEdge(1, 4, true, 30);
-  g2.addEdge(2, 3, true, 20);
-  g2.addEdge(2, 5, true, 10);
-  g2.addEdge(4, 5, true, 50);
-  g2.addEdge(3, 8, true, 50);
-  g2.addEdge(3, 7, true, 50);
-  g2.addEdge(7, 9, true, 50);
-  g2.printGraph();
-  cout <<endl;
-  // g2.bfs(1);
-  if(g2.containsCycle(1)){
-    cout << "Graph contains cycle";
-  } else {
-    cout << "Graph doesnot contain cycle";
-  }
+  // TemplateGraph<int> g2(9);
+  // g2.addEdge(1, 2, false, 40);
+  //  g2.addEdge(4, 1, false, 30);
+  // g2.addEdge(2, 3, false, 20);
+  // g2.addEdge(2, 5, false, 10);
+  // g2.addEdge(4, 5, false, 50);
+  // g2.addEdge(3, 8, false, 50);
+  // g2.addEdge(3, 7, false, 50);
+  // g2.addEdge(7, 9, false, 50);
+  // g2.printGraph();
+  // cout <<endl;
+  // // g2.bfs(1);
+  // if(g2.containsCycle(1)){
+  //   cout << "Graph contains cycle";
+  // } else {
+  //   cout << "Graph doesnot contain cycle";
+  // }
+
   return 0;
 }
