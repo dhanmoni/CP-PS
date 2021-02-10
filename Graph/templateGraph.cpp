@@ -14,6 +14,7 @@ URL:
 #include <climits>
 #include <stack>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -34,7 +35,6 @@ class TemplateGraph {
     }
   public:
     TemplateGraph(int v): V(v) {}
-    vector<int> vec;
     void addEdge(T from, T to,bool isBiDir, int weight) {
       adjList[from].push_back(make_pair(to, weight));
       if(isBiDir) {
@@ -144,36 +144,91 @@ class TemplateGraph {
       } 
     }
 
+    void bellmanFord(T start) {
+      map<T, int> dist;
+      // priority_queue<pair<T, int>, vector<pair<T, int>>, greater<pair<T, int>>> pq;
+      map<T, T> parent;
+      stack<T> res;
+      for(auto node: adjList){
+        T key = node.first;
+        dist[key] = INT_MAX;
+      }
+      dist[start] = 0;
+      // // pq.push(make_pair(start, 0));
+      for(int i = 0; i < V - 1; ++i){
+
+        for(auto node: adjList){
+          cout << "itr-> " << node.first << "\t";
+          for(auto edge: adjList[node.first]){
+            cout << edge.first << "," << edge.second ;
+            T key = edge.first;
+            int wt = edge.second;
+            if(dist[node.first] != INT_MAX && dist[node.first] + wt < dist[key]){
+              cout <<" less ->" << dist[node.first] + wt << ","<< dist[key] << "\t";
+              dist[key] = dist[node.first] + wt;
+              parent[key] = node.first;
+            }
+          }
+          cout <<endl;
+
+        }
+      }
+
+      for(auto node: adjList){
+        for(auto edge: adjList[node.first]){
+          // cout << node.first << " " << edge.first << " ";
+          T key = edge.first;
+          int wt = edge.second;
+          if(dist[node.first] + wt < dist[key]){
+            dist[key] = INT_MIN;
+          }
+        }
+      }
+      for(auto node: dist){
+        cout << node.first << "-> "<< node.second << "\t";
+      }
+      
+    }
+
+    void printEdge() {
+      for(auto node: adjList){
+        for(auto edge: adjList[node.first]){
+          cout << node.first << " " << edge.first << " ";
+        }
+        cout << "\t";
+      }
+    }
+
 };
 
 
 int main() {
 
 
-  TemplateGraph<string> g3(9);
-  g3.addEdge("AB", "BC", true, 2);
-  g3.addEdge("AB", "CD", true, 5);
-  g3.addEdge("BC", "DE", true, 7);
-  g3.addEdge("CD", "DE", true, 2);
-  g3.addEdge("CD", "EF", true, 3);
-  g3.addEdge("EF", "FG", true, 4);
-  g3.addEdge("EF", "HI", true, 3);
-  g3.addEdge("FG", "GH", true, 1);
-  g3.addEdge("DE", "FG", true, 1);
-  // g.printGraph();
-  g3.dijkstras("AB", "FG");
+  // TemplateGraph<string> g3(9);
+  // g3.addEdge("AB", "BC", true, 2);
+  // g3.addEdge("AB", "CD", true, 5);
+  // g3.addEdge("BC", "DE", true, 7);
+  // g3.addEdge("CD", "DE", true, 2);
+  // g3.addEdge("CD", "EF", true, 3);
+  // g3.addEdge("EF", "FG", true, 4);
+  // g3.addEdge("EF", "HI", true, 3);
+  // g3.addEdge("FG", "GH", true, 1);
+  // g3.addEdge("DE", "FG", true, 1);
+  // // g.printGraph();
+  // g3.dijkstras("AB", "FG");
     TemplateGraph<char> g(9);
-  g.addEdge('A', 'B', true, 2);
-  g.addEdge('A', 'C', true, 5);
-  g.addEdge('B', 'D', true, 7);
-  g.addEdge('C', 'D', true, 2);
-  g.addEdge('C', 'E', true, 3);
-  g.addEdge('E', 'F', true, 4);
-  g.addEdge('E', 'H', true, 3);
-  g.addEdge('F', 'G', true, 1);
-  g.addEdge('D', 'F', true, 1);
-  // g.printGraph();
-  g.dijkstras('A', 'F');
+  g.addEdge('A', 'B', false, 2);
+  g.addEdge('A', 'C', false, 5);
+  g.addEdge('B', 'D', false, 7);
+  g.addEdge('C', 'D', false, 9);
+  g.addEdge('C', 'E', false, 3);
+  g.addEdge('E', 'F', false, 4);
+  g.addEdge('E', 'H', false, 3);
+  g.addEdge('F', 'G', false, 1);
+  g.addEdge('D', 'F', false, 1);
+  g.bellmanFord('A');
+  // g.dijkstras('A', 'F');
   
   // TemplateGraph<char> g(5);
   // g.addEdge('A', 'B', true, 20);
@@ -189,16 +244,16 @@ int main() {
   // // g.dfs('A');
 
   // cout << g.containsCycle('A');
-  TemplateGraph<int> g2(9);
-  g2.addEdge(1, 2, true, 4);
-  g2.addEdge(4, 1, true, 3);
-  g2.addEdge(2, 3, true, 2);
-  g2.addEdge(2, 5, true, 4);
-  g2.addEdge(4, 5, true, 1);
-  g2.addEdge(3, 8, true, 5);
-  g2.addEdge(3, 7, true, 2);
-  g2.addEdge(7, 9, true, 1);
-  g2.dijkstras(1, 5);
+  // TemplateGraph<int> g2(9);
+  // g2.addEdge(1, 2, true, 4);
+  // g2.addEdge(4, 1, true, 3);
+  // g2.addEdge(2, 3, true, 2);
+  // g2.addEdge(2, 5, true, 4);
+  // g2.addEdge(4, 5, true, 1);
+  // g2.addEdge(3, 8, true, 5);
+  // g2.addEdge(3, 7, true, 2);
+  // g2.addEdge(7, 9, true, 1);
+  // g2.dijkstras(1, 5);
   // g2.printGraph();
   // cout <<endl;
   // // g2.bfs(1);
