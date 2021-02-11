@@ -5,6 +5,7 @@ URL:
 
 
 */
+#include<stdio.h>
 #include<iostream>
 #include<vector>
 #include<algorithm>
@@ -17,6 +18,7 @@ URL:
 #include <map>
 
 using namespace std;
+
 
 template <typename T>
 class TemplateGraph {
@@ -55,9 +57,9 @@ class TemplateGraph {
     }
     
 
-    void bellmanFord(T start) {
+    void bellmanFord(T start, T end) {
       map<T, int> dist;
-      // priority_queue<pair<T, int>, vector<pair<T, int>>, greater<pair<T, int>>> pq;
+      map<T, T> parent;
       stack<T> res;
       for(auto node: adjList){
         // T key = node.first;
@@ -81,6 +83,7 @@ class TemplateGraph {
             if(dist[from] != INT_MAX && dist[from] + wt < dist[to]){
               // cout <<" less ->" << dist[from] + wt << ","<< dist[to] << "\t";
               dist[to] = dist[from] + wt;
+              parent[to] = from;
               // cout << " new val of " << to << " = " << dist[to] << "\t";
             }
           }
@@ -101,7 +104,21 @@ class TemplateGraph {
       for(auto node: dist){
         cout << node.first << "-> "<< node.second << "\t";
       }
-      
+      cout << endl;
+      cout << "Total cost from " << start << " to "<<end << " is = "<< dist[end] << " and path = ";
+      T curr = end;
+      for(auto node: parent){
+        if(parent.find(curr) != parent.end()){
+          res.push(curr);
+          curr = parent[curr];
+        }
+      }
+      res.push(start);
+      while(!res.empty()){
+        T top = res.top();
+        cout << top << " ";
+        res.pop();
+      }
     }
 
 
@@ -109,8 +126,9 @@ class TemplateGraph {
 
 
 int main() {
-
-
+  
+  vector<string> vec = {"hello", "world", "Everyone"};
+  //C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0
   // TemplateGraph<string> g3(9);
   // g3.addEdge("AB", "BC", true, 2);
   // g3.addEdge("AB", "CD", true, 5);
@@ -133,7 +151,7 @@ int main() {
   g.addEdge('E', 'H', 3);
   g.addEdge('F', 'G', 1);
   g.addEdge('D', 'F', 1);
-  g.bellmanFord('A');
+  g.bellmanFord('A', 'F');
   // g.dijkstras('A', 'F');
   
   // TemplateGraph<char> g(5);
