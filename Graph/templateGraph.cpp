@@ -205,18 +205,18 @@ class TemplateGraph {
 int main() {
 
 
-  // TemplateGraph<string> g3(9);
-  // g3.addEdge("AB", "BC", true, 2);
-  // g3.addEdge("AB", "CD", true, 5);
-  // g3.addEdge("BC", "DE", true, 7);
-  // g3.addEdge("CD", "DE", true, 2);
-  // g3.addEdge("CD", "EF", true, 3);
-  // g3.addEdge("EF", "FG", true, 4);
-  // g3.addEdge("EF", "HI", true, 3);
-  // g3.addEdge("FG", "GH", true, 1);
-  // g3.addEdge("DE", "FG", true, 1);
-  // // g.printGraph();
-  // g3.dijkstras("AB", "FG");
+  TemplateGraph<string> g3(9);
+  g3.addEdge("AB", "BC", true, 2);
+  g3.addEdge("AB", "CD", true, 5);
+  g3.addEdge("BC", "DE", true, 7);
+  g3.addEdge("CD", "DE", true, 2);
+  g3.addEdge("CD", "EF", true, 3);
+  g3.addEdge("EF", "FG", true, 4);
+  g3.addEdge("EF", "HI", true, 3);
+  g3.addEdge("FG", "GH", true, 1);
+  g3.addEdge("DE", "FG", true, 1);
+  // g.printGraph();
+  g3.dijkstras("AB", "FG");
     TemplateGraph<char> g(9);
   g.addEdge('A', 'B', false, 2);
   g.addEdge('A', 'C', false, 5);
@@ -244,24 +244,24 @@ int main() {
   // // g.dfs('A');
 
   // cout << g.containsCycle('A');
-  // TemplateGraph<int> g2(9);
-  // g2.addEdge(1, 2, true, 4);
-  // g2.addEdge(4, 1, true, 3);
-  // g2.addEdge(2, 3, true, 2);
-  // g2.addEdge(2, 5, true, 4);
-  // g2.addEdge(4, 5, true, 1);
-  // g2.addEdge(3, 8, true, 5);
-  // g2.addEdge(3, 7, true, 2);
-  // g2.addEdge(7, 9, true, 1);
-  // g2.dijkstras(1, 5);
-  // g2.printGraph();
-  // cout <<endl;
-  // // g2.bfs(1);
-  // if(g2.containsCycle(1)){
-  //   cout << "Graph contains cycle";
-  // } else {
-  //   cout << "Graph doesnot contain cycle";
-  // }
+  TemplateGraph<int> g2(9);
+  g2.addEdge(1, 2, true, 4);
+  g2.addEdge(4, 1, true, 3);
+  g2.addEdge(2, 3, true, 2);
+  g2.addEdge(2, 5, true, 4);
+  g2.addEdge(4, 5, true, 1);
+  g2.addEdge(3, 8, true, 5);
+  g2.addEdge(3, 7, true, 2);
+  g2.addEdge(7, 9, true, 1);
+  g2.dijkstras(1, 5);
+  g2.printGraph();
+  cout <<endl;
+  // g2.bfs(1);
+  if(g2.containsCycle(1)){
+    cout << "Graph contains cycle";
+  } else {
+    cout << "Graph doesnot contain cycle";
+  }
 
   return 0;
 }
